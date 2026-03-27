@@ -98,7 +98,7 @@ function App() {
       </div>
 
       {isAuthenticated && (
-          <AdminSimulator ngrokUrl="https://papercutting-drily-braylee.ngrok-free.dev" />
+          <AdminSimulator ngrokUrl="https://debitmeke-backend.onrender.com" />
       )}
     </div>
   );
