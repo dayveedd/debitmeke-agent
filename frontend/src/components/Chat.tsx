@@ -21,6 +21,7 @@ export const Chat = () => {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [authorizingId, setAuthorizingId] = useState<string | null>(null);
+  const [deniedId, setDeniedId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { setBalance, setCards } = useStore();
   const { loginWithPopup, getAccessTokenSilently, getIdTokenClaims, isAuthenticated } = useAuth0();
@@ -127,6 +128,27 @@ export const Chat = () => {
     }
   };
 
+  const handleDeny = async (alertData: any) => {
+    setDeniedId(alertData.id);
+    try {
+      const res = await axios.post(`${API_URL}/deny-charge`, {
+         card_id: alertData.card_id,
+         amount: alertData.amount,
+         merchant: alertData.merchant,
+         user_id: 'user_1'
+      });
+      if (res.data.status === 'success') {
+         setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'agent', text: `🛡️ ${res.data.message}` }]);
+         await refreshVault();
+      }
+    } catch (e) {
+      console.error(e);
+      setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'agent', text: `❌ Failed to deny the charge.` }]);
+    } finally {
+      setDeniedId(null);
+    }
+  };
+
   return (
     <div className="flex flex-col h-full bg-charcoal-light border-r border-gray-800">
       <div className="p-4 border-b border-gray-800 flex items-center justify-between">
@@ -149,17 +171,30 @@ export const Chat = () => {
               <p className="text-sm leading-relaxed">{msg.text}</p>
               
               {msg.isAlert && (
-                <button 
-                  onClick={() => handleAuthorize(msg.alertData)}
-                  disabled={authorizingId === msg.alertData.id}
-                  className="mt-3 w-full bg-primary-orange hover:bg-orange-600 text-charcoal font-bold py-2 px-4 rounded transition-colors text-sm flex justify-center items-center disabled:opacity-50"
-                >
-                  {authorizingId === msg.alertData.id ? (
-                      <><Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Authorizing...</>
-                  ) : (
-                      "Authorize via Auth0"
-                  )}
-                </button>
+                <div className="mt-3 flex flex-col space-y-2">
+                  <button 
+                    onClick={() => handleAuthorize(msg.alertData)}
+                    disabled={authorizingId === msg.alertData.id || deniedId === msg.alertData.id}
+                    className="w-full bg-primary-orange hover:bg-orange-600 text-charcoal font-bold py-2 px-4 rounded transition-colors text-sm flex justify-center items-center disabled:opacity-50"
+                  >
+                    {authorizingId === msg.alertData.id ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Authorizing...</>
+                    ) : (
+                        "Authorize via Auth0"
+                    )}
+                  </button>
+                  <button 
+                    onClick={() => handleDeny(msg.alertData)}
+                    disabled={authorizingId === msg.alertData.id || deniedId === msg.alertData.id}
+                    className="w-full bg-transparent border border-red-500 hover:bg-red-500/10 text-red-500 font-bold py-2 px-4 rounded transition-colors text-sm flex justify-center items-center disabled:opacity-50"
+                  >
+                    {deniedId === msg.alertData.id ? (
+                        <><Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Denying...</>
+                    ) : (
+                        "Deny Charge"
+                    )}
+                  </button>
+                </div>
               )}
             </div>
           </div>

@@ -153,6 +153,17 @@ async def authorize_charge(req: Request, token_data: dict = Depends(verify_token
     record_transaction(user_id, card_id, amount, card.get("merchant_name"), "Failed (Insufficient Limit/Balance)")
     return {"status": "error", "message": "Insufficient Main Wallet balance or Card Limit"}
 
+@app.post("/api/deny-charge")
+async def deny_charge(req: Request):
+    data = await req.json()
+    card_id = data.get("card_id")
+    amount = data.get("amount")
+    merchant = data.get("merchant")
+    user_id = data.get("user_id", "user_1")
+    
+    record_transaction(user_id, card_id, amount, merchant, "Failed (Manually Denied)")
+    return {"status": "success", "message": f"Successfully blocked the ₦{amount} charge from {merchant}."}
+
 @app.get("/api/transactions")
 def list_transactions(user_id: str = "user_1"):
     return {"transactions": get_transactions(user_id)}
