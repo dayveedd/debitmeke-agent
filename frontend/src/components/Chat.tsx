@@ -12,7 +12,7 @@ interface Message {
   alertData?: any;
 }
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([

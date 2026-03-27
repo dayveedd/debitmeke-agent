@@ -5,7 +5,7 @@ import { VirtualCard } from './VirtualCard';
 import { TransactionHistory } from './TransactionHistory';
 import { Plus, Wallet, ShieldAlert, Lock } from 'lucide-react';
 
-const API_URL = "http://localhost:8000/api";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
 export const Vault = () => {
   const { balance, cards, setBalance, setCards } = useStore();
