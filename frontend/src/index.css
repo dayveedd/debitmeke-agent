@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-charcoal: #121212;
+  --color-charcoal-light: #1E1E1E;
+  --color-primary-orange: #FF6B00;
+  --color-accent-gold: #FFD700;
+  --color-off-white: #F5F5F5;
+}
+
+@layer base {
+  body {
+    @apply bg-charcoal text-off-white font-sans antialiased m-0 p-0 overflow-hidden;
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-charcoal; 
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-charcoal-light rounded-full border border-gray-800;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-primary-orange;
+}
