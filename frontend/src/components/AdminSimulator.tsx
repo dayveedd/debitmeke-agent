@@ -38,7 +38,7 @@ export const AdminSimulator = ({ ngrokUrl }: { ngrokUrl: string }) => {
         return (
              <button 
                onClick={() => setIsOpen(true)}
-               className="absolute bottom-6 left-6 z-50 bg-gray-900 border border-gray-700 hover:border-accent-gold text-gray-400 hover:text-accent-gold p-4 rounded-full transition-all shadow-[0_0_20px_rgba(0,0,0,0.8)] flex items-center justify-center group"
+               className="absolute bottom-28 left-6 z-50 bg-gray-900 border border-gray-700 hover:border-accent-gold text-gray-400 hover:text-accent-gold p-4 rounded-full transition-all shadow-[0_0_20px_rgba(0,0,0,0.8)] flex items-center justify-center group"
              >
                 <Terminal className="w-6 h-6" />
                 <span className="w-0 overflow-hidden group-hover:w-auto group-hover:ml-3 whitespace-nowrap transition-all text-xs font-black tracking-widest uppercase">Admin Tester</span>
@@ -47,7 +47,7 @@ export const AdminSimulator = ({ ngrokUrl }: { ngrokUrl: string }) => {
     }
 
     return (
-        <div className="absolute bottom-6 left-6 z-50 bg-charcoal-light border border-gray-700 rounded-2xl w-80 shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col">
+        <div className="absolute bottom-28 left-6 z-50 bg-charcoal-light border border-gray-700 rounded-2xl w-80 shadow-[0_10px_40px_rgba(0,0,0,0.8)] overflow-hidden flex flex-col">
             <div className="bg-gray-800 p-3 flex justify-between items-center border-b border-gray-700">
                 <div className="flex items-center text-accent-gold font-bold text-sm tracking-wide uppercase">
                     <Terminal className="w-4 h-4 mr-2" />

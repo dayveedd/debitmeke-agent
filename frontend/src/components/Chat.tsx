@@ -20,6 +20,7 @@ export const Chat = () => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [authorizingId, setAuthorizingId] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const { setBalance, setCards } = useStore();
   const { loginWithPopup, getAccessTokenSilently, getIdTokenClaims, isAuthenticated } = useAuth0();
@@ -85,6 +86,7 @@ export const Chat = () => {
   };
 
   const handleAuthorize = async (alertData: any) => {
+    setAuthorizingId(alertData.id);
     try {
       // Step-Up Auth via Auth0. If user didn't give auth0 keys, we just mock login
       let token = "mocked-token";
@@ -120,6 +122,8 @@ export const Chat = () => {
     } catch (e) {
       console.error(e);
       setMessages(prev => [...prev, { id: Date.now().toString(), sender: 'agent', text: `❌ Step-Up Authentication failed.` }]);
+    } finally {
+      setAuthorizingId(null);
     }
   };
 
@@ -147,9 +151,14 @@ export const Chat = () => {
               {msg.isAlert && (
                 <button 
                   onClick={() => handleAuthorize(msg.alertData)}
-                  className="mt-3 w-full bg-primary-orange hover:bg-orange-600 text-charcoal font-bold py-2 px-4 rounded transition-colors text-sm"
+                  disabled={authorizingId === msg.alertData.id}
+                  className="mt-3 w-full bg-primary-orange hover:bg-orange-600 text-charcoal font-bold py-2 px-4 rounded transition-colors text-sm flex justify-center items-center disabled:opacity-50"
                 >
-                  Authorize via Auth0
+                  {authorizingId === msg.alertData.id ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin inline" /> Authorizing...</>
+                  ) : (
+                      "Authorize via Auth0"
+                  )}
                 </button>
               )}
             </div>
